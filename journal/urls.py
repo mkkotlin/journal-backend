@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.urls import  path
-from .views import TestAuthView
+from .views import TestAuthView, JournalEntryListview, EntryListView
 
 urlpatterns = [
-    path('test/', TestAuthView.as_view())
+    path('test/', TestAuthView.as_view()),
+    path('journals/', JournalEntryListview.as_view(), name='journal_list'),
+    path('entry/', EntryListView.as_view(), name='entry')
 ]
