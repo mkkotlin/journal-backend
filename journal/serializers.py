@@ -5,7 +5,7 @@ from journal.models import JournalEntry, Entry
 class JournalEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = JournalEntry
-        fields = ['id', 'title', 'content', 'created_at']
+        fields = '__all__'
 
 
 class EntrySerializer(serializers.ModelSerializer):

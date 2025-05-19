@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from journal.models import JournalEntry, Entry
 from journal.serializers import JournalEntrySerializer, EntrySerializer
+from rest_framework import status
 
 # Create your views here.
 
@@ -21,9 +22,23 @@ class JournalEntryListview(APIView):
         serializer = JournalEntrySerializer(journals, many=True)
         return Response(serializer.data)
     
+    def post(self,request):
+        serializer = JournalEntrySerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 class EntryListView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request):
         enties = Entry.objects.all().order_by('-date')
         serializer = EntrySerializer(enties, many=True)
         return Response(serializer.data)
+    
+    def post(self,request):
+        serializer = EntrySerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_201_CREATED)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
