@@ -6,6 +6,7 @@ class JournalEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = JournalEntry
         fields = '__all__'
+        read_only_fields = ['user']
 
 
 class EntrySerializer(serializers.ModelSerializer):
