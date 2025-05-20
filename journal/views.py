@@ -32,13 +32,13 @@ class JournalEntryListview(APIView):
 class EntryListView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request):
-        enties = Entry.objects.all().order_by('-date')
+        enties = Entry.objects.filter(user=self.request.user).order_by('-date')
         serializer = EntrySerializer(enties, many=True)
         return Response(serializer.data)
     
     def post(self,request):
         serializer = EntrySerializer(data = request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user=self.request.user, is_private=True)
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
