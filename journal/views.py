@@ -11,7 +11,7 @@ class TestAuthView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self,request):
-        return Response({"message":"Auth True from backend"})
+        return Response({"user":request.user.username})
     
 
 class JournalEntryListview(APIView):
