@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from journal.models import JournalEntry, Entry
 from journal.serializers import JournalEntrySerializer, EntrySerializer
-from rest_framework import status
+from rest_framework import status, generics
 
 # Create your views here.
 
@@ -42,3 +42,14 @@ class EntryListView(APIView):
             serializer.save(user=self.request.user, is_private=True)
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+
+class  JournalDeleteView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = JournalEntry.objects.all()
+    serializer_class = JournalEntrySerializer
+
+class  EntryDeleteView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Entry.objects.all()
+    serializer_class = EntrySerializer
