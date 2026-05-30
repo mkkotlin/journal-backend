@@ -1,8 +1,9 @@
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from django.contrib.auth.models import User
 from journal.models import JournalEntry, Entry
-from journal.serializers import JournalEntrySerializer, EntrySerializer
+from journal.serializers import JournalEntrySerializer, EntrySerializer, UserRegisterSerializer
 from rest_framework import status, generics
 
 # Create your views here.
@@ -46,10 +47,33 @@ class EntryListView(APIView):
 
 class  JournalDeleteView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = JournalEntry.objects.all()
     serializer_class = JournalEntrySerializer
+
+    def get_queryset(self):
+        return JournalEntry.objects.filter(user=self.request.user)
 
 class  EntryDeleteView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = Entry.objects.all()
     serializer_class = EntrySerializer
+
+    def get_queryset(self):
+        return Entry.objects.filter(user=self.request.user)
+
+class UserRegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserRegisterSerializer
+    permission_classes = [AllowAny]
+
+class JournalUpdateView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = JournalEntrySerializer
+
+    def get_queryset(self):
+        return JournalEntry.objects.filter(user=self.request.user)
+
+class EntryUpdateView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = EntrySerializer
+
+    def get_queryset(self):
+        return Entry.objects.filter(user=self.request.user)
